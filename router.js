@@ -15,8 +15,5 @@ router.get('/tournaments/css/style.css', (req, res) => {
 router.get('/tournaments/:tournamentId', (req, res) => {
 	res.status(200).render('tournament');
 });
-router.get('/tournaments/:tournamentId/players/:playerId', (req, res) => {
-	res.status(200).render('player');
-});
 
 module.exports = router;
