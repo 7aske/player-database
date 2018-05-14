@@ -1,0 +1,177 @@
+body {
+	background-color: #eeeeee;
+}
+.addBtn {
+	border: 2px solid rgba(0, 0, 0, 0);
+	border-radius: 5px;
+	background-color: #333333;
+	color: #eeeeee;
+	height: 40px;
+	line-height: 20px;
+	font-size: 20px;
+	margin: 10px auto;
+	cursor: pointer;
+	transition: all 200ms;
+	&:hover {
+		border-color: #333333;
+		background-color: #eeeeee;
+		color: #333333;
+	}
+}
+#addPlayer {
+	img {
+		width: 100px;
+		height: 100px;
+		border-radius: 5px;
+		border: 1px solid rgba(0, 0, 0, 0.7);
+	}
+}
+#addTournament {
+	form {
+		button {
+			float: right;
+		}
+		input {
+			border-radius: 4px;
+			padding: 5px;
+			margin-bottom: 20px;
+			border: 1px solid #dddddd;
+			display: block;
+			width: 100%;
+			-webkit-appearance: none;
+			-moz-appearance: textfield;
+		}
+	}
+}
+#addPlayer {
+	form {
+		button {
+			float: right;
+		}
+		input {
+			text-align: center;
+			border-radius: 4px;
+			padding: 5px;
+			margin-bottom: 20px;
+			border: 1px solid #dddddd;
+			display: block;
+			width: 100%;
+			-webkit-appearance: none;
+			-moz-appearance: textfield;
+		}
+	}
+}
+#header {
+	height: 50px;
+	width: 100%;
+	background-color: #333333;
+	a {
+		display: inline-block;
+		button {
+			border: 2px solid rgba(0, 0, 0, 0);
+			border-radius: 5px;
+			background-color: #eeeeee;
+			color: #333333;
+			height: 40px;
+			line-height: 20px;
+			font-size: 20px;
+			margin: 4px 5px;
+			cursor: pointer;
+			transition: all 200ms;
+			&:hover {
+				border-color: #eeeeee;
+				color: #eeeeee;
+				background-color: #333333;
+			}
+		}
+	}
+}
+#home {
+	.tCont {
+		border-radius: 10px;
+		width: 80%;
+		border: 1px solid grey;
+		cursor: pointer;
+		margin: 20px auto;
+		transition: color background-color 500ms;
+		&:hover {
+			background-color: #333333;
+			color: #eeeeee;
+			.tId {
+				color: #eeeeee;
+			}
+		}
+		.tHead {
+			transition: color background-color 500ms;
+			padding: 10px;
+			border-bottom: 2px solid black;
+		}
+		.tId {
+			transition: all 500ms;
+			color: grey;
+		}
+	}
+}
+#tournament {
+	.tCont {
+		.tRemove {
+			display: none;
+			border: none;
+			border-radius: 5px;
+			margin: 5px auto;
+			background-color: #eeeeee;
+		}
+		border-radius: 10px;
+		width: 80%;
+		border: 1px solid grey;
+		margin: 20px auto;
+		transition: all 500ms;
+
+		.tHead {
+			position: relative;
+			transition: all 500ms;
+			padding: 10px;
+			border-bottom: 2px solid black;
+			.tPrize {
+				position: absolute;
+				right: 10px;
+				bottom: 5px;
+				color: #666666;
+				font-size: 18px;
+				font-weight: 700px;
+				i {
+					font-size: 18px;
+				}
+			}
+			&:hover {
+				.tRemove {
+					cursor: pointer;
+					display: block;
+				}
+			}
+		}
+		p {
+			margin-top: 5px;
+			margin-bottom: 0px;
+		}
+		.tId {
+			transition: all 500ms;
+			cursor: pointer;
+			color: grey;
+		}
+		.pCont {
+			//z-index: 1;
+			padding: 10px;
+			border-bottom: 1px solid #222222;
+			cursor: pointer;
+			&:hover {
+				background-color: #333333;
+				color: #eeeeee;
+				p,
+				.tId {
+					color: #eeeeee;
+				}
+			}
+		}
+	}
+}

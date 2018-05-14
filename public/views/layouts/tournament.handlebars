@@ -1,0 +1,31 @@
+<div class="container-fluid text-center">
+    <button id="addPlayerBtn" class="addBtn" type="button" data-toggle="modal" data-target="#addPlayer">Add player</button>
+    <div class="modal fade" id="addPlayer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img id="pImageContainer" src="https://www.weact.org/wp-content/uploads/2016/10/Blank-profile.png" alt="Profile image">
+                    <form action="" method="">
+                        <label for="pFirstName">First Name</label>
+                        <input class="text-center" placeholder="" type="text" name="pFirstName" required>
+                        <label for="pLastName">Last Name</label>
+                        <input class="text-center" placeholder="" type="test" name="pLastName" required>
+                        <label for="pBirthDate">Birth Date</label>
+                        <input class="text-center" placeholder="" type="date" name="pBirthDate" required>
+                        <label for="pImage">Image URL</label>
+                        <input class="text-center" value="https://www.weact.org/wp-content/uploads/2016/10/Blank-profile.png" type="url" name="pImage"
+                            required>
+                        <label for="pPoints">Points</label>
+                        <input class="text-center" placeholder="" type="number" min="0" name="pPoints" required>
+                        <button id="remove" type="button" class="btn btn-danger d-none" data-dismiss="modal">Remove</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="submit" type="button" class="btn btn-dark" data-dismiss="modal">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tournament" class="container">
+    </div>
+</div>
+<script src="/js/tournamentView.js"></script>

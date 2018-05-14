@@ -8,13 +8,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const url = require('url');
 
-// const uri =
-// 	'mongodb+srv://admin:hello123@cluster0-rsmz5.mongodb.net/tournaments';
+const publicPath = path.join(__dirname, '/public/views');
+console.log(publicPath);
+
 const uri =
 	'mongodb+srv://admin:hello123@cluster0-rsmz5.mongodb.net/tournaments';
 mongoose
 	.connect(uri)
-	.then(result => console.log(result))
+	.then()
 	.catch(err => console.log(err));
 
 const port = process.env.PORT || 3000;
@@ -24,9 +25,19 @@ server.use(express.static('public'));
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
 
-server.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+server.set('views', __dirname + '\\public\\views\\layouts');
+server.engine(
+	'handlebars',
+	exphbs({
+		extname: '.handlebars',
+		defaultLayout: 'main.handlebars',
+		layoutsDir: __dirname + '\\public\\views\\layouts',
+		partialsDir: __dirname + '\\public\\views\\layouts'
+	})
+);
 server.set('view engine', 'handlebars');
-server.set('views', path.join(__dirname, 'views'));
+
+console.log(server.get('views'));
 
 server.use('/api', api);
 server.use('/', router);

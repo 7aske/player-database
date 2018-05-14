@@ -1,83 +1,109 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
-const Tournament = require('./public/models/tournament');
-const randomID = require('random-id');
+const Players = require('./public/models/player');
+const Tournaments = require('./public/models/tournament');
 
 router.get('/tournaments', (req, res) => {
-	Tournament.find({})
+	Tournaments.find({})
 		.exec()
-		.then(docs => res.status(200).send(docs))
+		.then(tournaments => res.status(200).send(tournaments))
 		.catch(err => res.status(500).send({ error: err }));
 });
 router.get('/tournaments/:tournamentId', (req, res) => {
 	const tId = req.params.tournamentId;
-	Tournament.findOne({ _id: tId })
+	Tournaments.findOne({ _id: tId })
 		.exec()
-		.then(tournament => res.status(200).send(tournament))
+		.then(tournament => {
+			console.log(tournament.tPlayers);
+			Players.find()
+				.where('_id')
+				.in(tournament.tPlayers)
+				.exec()
+				.then(players =>
+					res.status(200).send({ tournament: tournament, players: players })
+				)
+				.catch(err => res.status(500).send({ error: err }));
+		})
 		.catch(err => res.status(500).send({ error: err }));
 });
 router.get('/tournaments/:tournamentId/players', (req, res) => {
 	const tId = req.params.tournamentId;
-	Tournament.findOne({ _id: tId })
+	Tournaments.findOne({ _id: tId })
 		.exec()
-		.then(tournament => res.status(200).send(tournament.tPlayers))
+		.then(tournament => {
+			Players.find()
+				.where('_id')
+				.in(tournament.tPlayers)
+				.exec()
+				.then(players => {
+					res.status(200).send({ tournament: tournament, players: players });
+				})
+				.catch(err => res.status(500).send({ error: err }));
+		})
 		.catch(err => res.status(500).send({ error: err }));
 });
 router.get('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 	const tId = req.params.tournamentId;
 	const pId = req.params.playerId;
-	Tournament.findOne({ _id: tId })
+	Tournaments.findOne({ _id: tId })
 		.exec()
 		.then(tournament => {
-			let data;
-			tournament.tPlayers.forEach(player => {
-				if (player._id == pId) data = player;
-			});
-			data ? res.status(200).send(data) : res.status(404).send({});
+			Players.findOne({ _id: pId })
+				.exec()
+				.then(player =>
+					res.status(200).send({ tournament: tournament, player: player })
+				)
+				.catch(err => res.status(500).send({ error: err }));
 		})
-		.catch((err, msg) => res.status(500).send({ error: err }));
+		.catch(err => res.status(500).send({ error: err }));
 });
 
 router.post('/tournaments', (req, res) => {
-	const tournament = new Tournament({
-		_id: new mongoose.Types.ObjectId(randomID(24, '0').toString()),
+	const tournament = new Tournaments({
+		_id: new mongoose.Types.ObjectId(),
 		tName: req.body.tName,
+		tPrize: req.body.tPrize,
 		tPlayers: req.body.tPlayers
 	});
 	tournament
 		.save()
 		.then(result => {
-			res.status(201).send(result);
+			res.status(201).redirect('/');
 		})
 		.catch(err => res.status(500).send({ error: err }));
 });
 router.post('/tournaments/:tournamentId/players', (req, res) => {
 	const tId = req.params.tournamentId;
-	const newPlayer = {
-		_id: new mongoose.Types.ObjectId(randomID(24, '0').toString()),
+	const player = new Players({
+		_id: new mongoose.Types.ObjectId(),
 		pFirstName: req.body.pFirstName,
 		pLastName: req.body.pLastName,
 		pBirthDate: new Date(),
 		pImage: req.body.pImage,
 		pPoints: req.body.pPoints
-	};
-	Tournament.update(
-		{ _id: tId },
-		{
-			$push: {
-				tPlayers: newPlayer
-			}
-		}
-	)
-		.exec()
+	});
+	player
+		.save()
 		.then(result => {
-			res.status(201).send(result);
+			Tournaments.update(
+				{ _id: tId },
+				{
+					$push: {
+						tPlayers: result._id
+					}
+				}
+			)
+				.exec()
+				.then(result => {
+					res.status(201).send(result);
+				})
+				.catch(err => res.status(500).send({ error: err }));
 		})
 		.catch(err => res.status(500).send({ error: err }));
 });
 router.delete('/tournaments/:tournamentId', (req, res) => {
 	const tId = req.params.tournamentId;
-	Tournament.findOneAndRemove({ _id: tId })
+	Tournaments.findOneAndRemove({ _id: tId })
 		.exec()
 		.then(result => res.status(200).send(result))
 		.catch(err => res.status(500).send(err));
@@ -85,58 +111,38 @@ router.delete('/tournaments/:tournamentId', (req, res) => {
 router.delete('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 	const tId = req.params.tournamentId;
 	const pId = req.params.playerId;
-	let tPlayersNew = [];
-	Tournament.findOne({ _id: tId })
+	Players.findOneAndRemove({ _id: pId })
 		.exec()
-		.then(tournament => {
-			tournament.tPlayers.forEach(player => {
-				if (player._id != pId) tPlayersNew.push(player);
-			});
-			Tournament.update(
+		.then(
+			Tournaments.findOneAndUpdate(
 				{ _id: tId },
 				{
-					$set: {
-						tPlayers: tPlayersNew
+					$pull: {
+						tPlayers: pId
 					}
 				}
 			)
 				.exec()
 				.then(result => res.status(200).send(result))
-				.catch(err => res.status(500).send({ error: err }));
-		})
+				.catch(err => res.status(500).send({ error: err }))
+		)
 		.catch(err => res.status(500).send({ error: err }));
 });
-router.patch('/tournaments/:tournamentId/players/:playerId', (req, res) => {
-	const tId = req.params.tournamentId;
+router.put('/tournaments/:tournamentId/players/:playerId', (req, res) => {
+	console.log(req.body);
 	const pId = req.params.playerId;
-	const patchPlayer = {
-		_id: new mongoose.Types.ObjectId(pId),
-		pFirstName: req.body.pFirstName,
-		pLastName: req.body.pLastName,
-		pBirthDate: new Date(),
-		pImage: req.body.pImage,
-		pPoints: req.body.pPoints
-	};
-	let tPlayersNew = [];
-	Tournament.findOne({ _id: tId })
+	Players.findByIdAndUpdate(
+		{ _id: pId },
+		{
+			pFirstName: req.body.pFirstName,
+			pLastName: req.body.pLastName,
+			pBirthDate: req.body.pBirthDate,
+			pImage: req.body.pImage == '' ? null : req.body.pImage,
+			pPoints: req.body.pPoints
+		}
+	)
 		.exec()
-		.then(tournament => {
-			tournament.tPlayers.forEach(player => {
-				if (player._id != pId) tPlayersNew.push(player);
-				else tPlayersNew.push(patchPlayer);
-			});
-			Tournament.update(
-				{ _id: Id },
-				{
-					$set: {
-						tPlayers: tPlayersNew
-					}
-				}
-			)
-				.exec()
-				.then(result => res.status(200).send(result))
-				.catch(err => res.status(500).send({ error: err }));
-		})
+		.then(result => res.status(201).sendStatus(201))
 		.catch(err => res.status(500).send({ error: err }));
 });
 module.exports = router;

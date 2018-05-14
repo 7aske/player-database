@@ -1,6 +1,6 @@
-let dataContainer = document.getElementById('dataContainer');
-function requestData() {
-	let url = new URL(window.location).href + 'api/tournaments';
+let dataContainer = document.getElementById('home');
+function requestData(url) {
+	//let url = new URL(window.location).href + 'api/tournaments';
 	let xhr = new XMLHttpRequest();
 
 	xhr.onreadystatechange = function() {
@@ -8,8 +8,8 @@ function requestData() {
 			renderData(JSON.parse(this.responseText));
 		}
 	};
-	xhr.open('GET', url);
-	xhr.send();
+	xhr.open('GET', url, true);
+	xhr.send(null);
 }
 function renderData(data) {
 	console.log(data);
@@ -19,19 +19,23 @@ function renderData(data) {
 
 		let tHead = document.createElement('h2');
 		tHead.classList.add('tHead');
-		tHead.innerText = t.tName;
+		tHead.innerHTML = '<i class="fa fa-trophy"></i> ' + t.tName;
 
 		let tId = document.createElement('p');
 		tId.classList.add('tId');
-		tId.innerHTML = `ID: ${t._id}<br>No. of participants: ${t.tPlayers.length}`;
+		//tId.innerHTML = `ID: ${t._id}<br>No. of participants: ${t.tPlayers.length}`;
+		tId.innerHTML = `Prize: ${t.tPrize}<br>No. of players: ${
+			t.tPlayers.length
+		}`;
 
 		tCont.appendChild(tHead);
 		tCont.appendChild(tId);
+
 		tCont.setAttribute('id', t._id);
 		tCont.addEventListener('click', () => {
-			window.location += 'api/tournaments/' + t._id;
+			window.location += 'tournaments/' + t._id;
 		});
 		dataContainer.appendChild(tCont);
 	});
 }
-requestData();
+requestData(new URL(window.location).href + 'api/tournaments');

@@ -1,0 +1,25 @@
+<div class="container-fluid text-center">
+    <button class="addBtn" type="button" data-toggle="modal" data-target="#addTournament">Add Tournament</button>
+    <div class="modal fade" id="addTournament" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a new tournament</h5>
+                </div>
+                <div class="modal-body">
+                    <form action="/api/tournaments" method="POST">
+                        <label for="tName">Tournament Name</label>
+                        <input class="text-center" placeholder="" type="text" name="tName" required>
+                        <label for="tPrize">Prize</label>
+                        <input class="text-center" placeholder="" type="number" min="0" name="tPrize" required>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-dark">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="home" class="container">
+    </div>
+</div>
+<script src="/js/index.js"></script>
