@@ -8,9 +8,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const url = require('url');
 
-const publicPath = path.join(__dirname, '/public/views');
-console.log(publicPath);
-
 const uri =
 	'mongodb+srv://admin:hello123@cluster0-rsmz5.mongodb.net/tournaments';
 mongoose
@@ -36,8 +33,6 @@ server.engine(
 	})
 );
 server.set('view engine', 'handlebars');
-
-console.log(server.get('views'));
 
 server.use('/api', api);
 server.use('/', router);
