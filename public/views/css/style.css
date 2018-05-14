@@ -141,9 +141,7 @@ body {
 }
 
 #tournament .tCont .tHead .tPrize {
-  position: absolute;
-  right: 10px;
-  bottom: 5px;
+  display: block;
   color: #666666;
   font-size: 18px;
   font-weight: 700px;
