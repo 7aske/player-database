@@ -22,14 +22,14 @@ server.use(express.static('public'));
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
 
-server.set('views', __dirname + '\\public\\views\\layouts');
+server.set('views', __dirname + '/public/views/layouts');
 server.engine(
 	'handlebars',
 	exphbs({
 		extname: '.handlebars',
 		defaultLayout: 'main.handlebars',
-		layoutsDir: __dirname + '\\public\\views\\layouts',
-		partialsDir: __dirname + '\\public\\views\\layouts'
+		layoutsDir: __dirname + '/public/views/layouts',
+		partialsDir: __dirname + '/public/views/layouts'
 	})
 );
 server.set('view engine', 'handlebars');
