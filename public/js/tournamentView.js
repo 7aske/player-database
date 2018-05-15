@@ -87,7 +87,10 @@ function renderData(data) {
 		if (confirm('Are you sure?')) {
 			//getting to this point i figure out that a lot of these functions can be separated
 			//to different modules. Will happen in future implementations
-			let id = event.target.parentElement.id;
+			let id =
+				//fixing the clicking event problem on mobile devices;
+				event.target.parentElement.id ||
+				event.target.parentElement.parentElement.id;
 			let url = new URL(window.location).origin + '/api/tournaments/' + id;
 			let xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function() {
