@@ -115,11 +115,16 @@ body {
 #tournament {
 	.tCont {
 		.tRemove {
-			display: none;
+			cursor: pointer;
+			display: block;
 			border: none;
 			border-radius: 5px;
 			margin: 5px auto;
 			background-color: #eeeeee;
+			&:hover {
+				background-color: #222222;
+				color: #eeeeee;
+			}
 		}
 		border-radius: 10px;
 		width: 80%;
@@ -139,12 +144,6 @@ body {
 				font-weight: 700px;
 				i {
 					font-size: 18px;
-				}
-			}
-			&:hover {
-				.tRemove {
-					cursor: pointer;
-					display: block;
 				}
 			}
 		}

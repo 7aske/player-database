@@ -126,11 +126,17 @@ body {
 }
 
 #tournament .tCont .tRemove {
-  display: none;
+  cursor: pointer;
+  display: block;
   border: none;
   border-radius: 5px;
   margin: 5px auto;
   background-color: #eeeeee;
+}
+
+#tournament .tCont .tRemove:hover {
+  background-color: #222222;
+  color: #eeeeee;
 }
 
 #tournament .tCont .tHead {
@@ -149,11 +155,6 @@ body {
 
 #tournament .tCont .tHead .tPrize i {
   font-size: 18px;
-}
-
-#tournament .tCont .tHead:hover .tRemove {
-  cursor: pointer;
-  display: block;
 }
 
 #tournament .tCont p {

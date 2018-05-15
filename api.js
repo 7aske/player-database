@@ -1,20 +1,24 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+
+//mongoose models
 const Players = require('./public/models/player');
 const Tournaments = require('./public/models/tournament');
 
+//default get ALL tournaments route
 router.get('/tournaments', (req, res) => {
 	Tournaments.find({})
 		.exec()
 		.then(tournaments => res.status(200).send(tournaments))
 		.catch(err => res.status(500).send({ error: err }));
 });
+
+//get specific tournament along with its cooresponding players
 router.get('/tournaments/:tournamentId', (req, res) => {
 	const tId = req.params.tournamentId;
 	Tournaments.findOne({ _id: tId })
 		.exec()
 		.then(tournament => {
-			console.log(tournament.tPlayers);
 			Players.find()
 				.where('_id')
 				.in(tournament.tPlayers)
@@ -26,6 +30,8 @@ router.get('/tournaments/:tournamentId', (req, res) => {
 		})
 		.catch(err => res.status(500).send({ error: err }));
 });
+
+//this is the same as the route above and I'm keeping it for possible future implementations
 router.get('/tournaments/:tournamentId/players', (req, res) => {
 	const tId = req.params.tournamentId;
 	Tournaments.findOne({ _id: tId })
@@ -42,6 +48,10 @@ router.get('/tournaments/:tournamentId/players', (req, res) => {
 		})
 		.catch(err => res.status(500).send({ error: err }));
 });
+
+//get a specific player along with tournament that player is playing onended
+//this was required in order to update the tournament player list
+//in case of player deletion
 router.get('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 	const tId = req.params.tournamentId;
 	const pId = req.params.playerId;
@@ -58,7 +68,9 @@ router.get('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 		.catch(err => res.status(500).send({ error: err }));
 });
 
+//adding a tournament to the database
 router.post('/tournaments', (req, res) => {
+	//using mongoose model to define the tournament
 	const tournament = new Tournaments({
 		_id: new mongoose.Types.ObjectId(),
 		tName: req.body.tName,
@@ -72,13 +84,16 @@ router.post('/tournaments', (req, res) => {
 		})
 		.catch(err => res.status(500).send({ error: err }));
 });
+
+//adding a player to the tournament and database
 router.post('/tournaments/:tournamentId/players', (req, res) => {
+	//using mongoose model to define the player
 	const tId = req.params.tournamentId;
 	const player = new Players({
 		_id: new mongoose.Types.ObjectId(),
 		pFirstName: req.body.pFirstName,
 		pLastName: req.body.pLastName,
-		pBirthDate: new Date(),
+		pBirthDate: req.body.pBirthDate,
 		pImage: req.body.pImage,
 		pPoints: req.body.pPoints
 	});
@@ -89,7 +104,7 @@ router.post('/tournaments/:tournamentId/players', (req, res) => {
 				{ _id: tId },
 				{
 					$push: {
-						tPlayers: result._id
+						tPlayers: result._id //add the player id to tournament player list for future reference
 					}
 				}
 			)
@@ -101,13 +116,17 @@ router.post('/tournaments/:tournamentId/players', (req, res) => {
 		})
 		.catch(err => res.status(500).send({ error: err }));
 });
+
+//delete the tournament
 router.delete('/tournaments/:tournamentId', (req, res) => {
 	const tId = req.params.tournamentId;
 	Tournaments.findOneAndRemove({ _id: tId })
 		.exec()
 		.then(result => res.status(200).send(result))
-		.catch(err => res.status(500).send(err));
+		.catch(err => res.status(500).send({ error: err }));
 });
+
+//delete a player from players database and from its cooresponding tournament player list
 router.delete('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 	const tId = req.params.tournamentId;
 	const pId = req.params.playerId;
@@ -128,8 +147,9 @@ router.delete('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 		)
 		.catch(err => res.status(500).send({ error: err }));
 });
+
+//update the player with new details
 router.put('/tournaments/:tournamentId/players/:playerId', (req, res) => {
-	console.log(req.body);
 	const pId = req.params.playerId;
 	Players.findByIdAndUpdate(
 		{ _id: pId },
@@ -137,6 +157,8 @@ router.put('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 			pFirstName: req.body.pFirstName,
 			pLastName: req.body.pLastName,
 			pBirthDate: req.body.pBirthDate,
+			//had issues with pictures actually being blank strings
+			//null should trigger the default value from mongoose models
 			pImage: req.body.pImage == '' ? null : req.body.pImage,
 			pPoints: req.body.pPoints
 		}
