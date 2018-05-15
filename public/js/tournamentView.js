@@ -170,12 +170,12 @@ function setModalPost() {
 	request = 'POST';
 	form.method = 'POST';
 	form.setAttribute('action', `/api${window.location.pathname}/players`);
-	pFirstName.value = '';
-	pLastName.value = '';
+	pFirstName.value = 'John';
+	pLastName.value = 'Doe';
 	pBirthDate.value = date;
 	pImage.value =
 		'https://www.weact.org/wp-content/uploads/2016/10/Blank-profile.png';
-	pPoints.value = '';
+	pPoints.value = '1000';
 }
 //update the modal with required values for updating
 function setModalPatch(event) {
