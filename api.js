@@ -122,7 +122,7 @@ router.delete('/tournaments/:tournamentId', (req, res) => {
 	const tId = req.params.tournamentId;
 	Tournaments.findOneAndRemove({ _id: tId })
 		.exec()
-		.then(result => res.status(200).send(result))
+		.then(result => res.status(200).sendStatus(200))
 		.catch(err => res.status(500).send({ error: err }));
 });
 
@@ -142,7 +142,7 @@ router.delete('/tournaments/:tournamentId/players/:playerId', (req, res) => {
 				}
 			)
 				.exec()
-				.then(result => res.status(200).send(result))
+				.then(result => res.status(200).sendStatus(200))
 				.catch(err => res.status(500).send({ error: err }))
 		)
 		.catch(err => res.status(500).send({ error: err }));
